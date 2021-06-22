@@ -1,0 +1,8 @@
+*.log
+/.php_cs
+/.php_cs.cache
+/.phpunit.result.cache
+/vendor/
+/composer.lock
+.php-cs-fixer.php
+.php-cs-fixer.cache
