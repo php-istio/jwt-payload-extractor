@@ -17,7 +17,7 @@ final class Base64HeaderExtractor extends AbstractExtractor
         parent::__construct($issuer, 'headers', $itemName);
     }
 
-    protected function extractFromValue(mixed $value): ?array
+    protected function extractFromValue(string $value): ?array
     {
         return $this->extractFromBase64EncodedPayload($value);
     }

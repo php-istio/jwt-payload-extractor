@@ -21,7 +21,7 @@ final class OriginTokenExtractor extends AbstractExtractor
         parent::__construct($issuer, $requestBag, $itemName);
     }
 
-    protected function extractFromValue(mixed $value): ?array
+    protected function extractFromValue(string $value): ?array
     {
         $tokenParts = explode('.', $value, 3);
 

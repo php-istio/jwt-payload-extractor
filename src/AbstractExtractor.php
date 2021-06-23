@@ -42,7 +42,7 @@ abstract class AbstractExtractor implements ExtractorInterface
         $bag = $request->{$this->requestBag};
         $value = $bag->get($this->itemName);
 
-        if (null === $value) {
+        if (false !== is_string($value)) {
             return null;
         }
 
@@ -55,7 +55,7 @@ abstract class AbstractExtractor implements ExtractorInterface
         return $payload;
     }
 
-    abstract protected function extractFromValue(mixed $value): ?array;
+    abstract protected function extractFromValue(string $value): ?array;
 
     final protected function extractFromBase64EncodedPayload(string $encodedPayload): ?array
     {
