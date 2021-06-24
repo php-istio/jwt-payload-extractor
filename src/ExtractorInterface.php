@@ -14,9 +14,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface ExtractorInterface
 {
-    public const IN_HEADER = 'header';
-
-    public const IN_QUERY_PARAM = 'query_param';
-
+    /*
+     * Extract JWT payload from server request.
+     */
     public function extract(ServerRequestInterface $request): ?array;
 }

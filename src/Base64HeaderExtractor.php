@@ -14,7 +14,7 @@ final class Base64HeaderExtractor extends AbstractExtractor
 {
     public function __construct(string $issuer, string $item)
     {
-        parent::__construct($issuer, ExtractorInterface::IN_HEADER, $item);
+        parent::__construct($issuer, self::IN_HEADER, $item);
     }
 
     protected function extractFromValue(string $value): ?array

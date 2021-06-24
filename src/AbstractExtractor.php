@@ -14,6 +14,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractExtractor implements ExtractorInterface
 {
+    public const IN_HEADER = 'header';
+
+    public const IN_QUERY_PARAM = 'query_param';
+
     private string $in;
 
     private string $item;
@@ -29,8 +33,8 @@ abstract class AbstractExtractor implements ExtractorInterface
             throw new \LogicException('Issuer can not be blank!');
         }
 
-        if (ExtractorInterface::IN_HEADER !== $in && ExtractorInterface::IN_QUERY_PARAM !== $in) {
-            throw new \LogicException(sprintf('Origin token must in: `%s` or `%s`, can not in: `%s`', ExtractorInterface::IN_HEADER, ExtractorInterface::IN_QUERY_PARAM, $in));
+        if (self::IN_HEADER !== $in && self::IN_QUERY_PARAM !== $in) {
+            throw new \LogicException(sprintf('Origin token must in: `%s` or `%s`, can not in: `%s`', self::IN_HEADER, self::IN_QUERY_PARAM, $in));
         }
 
         $this->issuer = $issuer;
@@ -41,8 +45,8 @@ abstract class AbstractExtractor implements ExtractorInterface
     final public function extract(ServerRequestInterface $request): ?array
     {
         $value = match ($this->in) {
-            ExtractorInterface::IN_HEADER => $request->getHeader($this->item)[0] ?? null,
-            ExtractorInterface::IN_QUERY_PARAM => $request->getQueryParams()[$this->item] ?? null
+            self::IN_HEADER => $request->getHeader($this->item)[0] ?? null,
+            self::IN_QUERY_PARAM => $request->getQueryParams()[$this->item] ?? null
         };
 
         if (false === is_string($value)) {

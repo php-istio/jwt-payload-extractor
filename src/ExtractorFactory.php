@@ -12,22 +12,22 @@ namespace Istio\JWTPayloadExtractor;
 
 class ExtractorFactory
 {
-    public static function fromBase64Header(string $issuer, string $header): Base64HeaderExtractor
+    public static function fromBase64Header(string $issuer, string $header): ExtractorInterface
     {
         return new Base64HeaderExtractor($issuer, $header);
     }
 
-    public static function fromOriginTokenHeader(string $issuer, string $header): OriginTokenExtractor
+    public static function fromOriginTokenHeader(string $issuer, string $header): ExtractorInterface
     {
-        return new OriginTokenExtractor($issuer, ExtractorInterface::IN_HEADER, $header);
+        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_HEADER, $header);
     }
 
-    public static function fromOriginTokenQueryParam(string $issuer, string $queryParam): OriginTokenExtractor
+    public static function fromOriginTokenQueryParam(string $issuer, string $queryParam): ExtractorInterface
     {
-        return new OriginTokenExtractor($issuer, ExtractorInterface::IN_QUERY_PARAM, $queryParam);
+        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_QUERY_PARAM, $queryParam);
     }
 
-    public static function fromExtractors(ExtractorInterface ...$extractors): CompositeExtractor
+    public static function fromExtractors(ExtractorInterface ...$extractors): ExtractorInterface
     {
         return new CompositeExtractor($extractors);
     }

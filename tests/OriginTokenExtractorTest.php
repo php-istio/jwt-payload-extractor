@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Istio\JWTPayloadExtractor\Tests;
 
-use Istio\JWTPayloadExtractor\ExtractorInterface;
+use Istio\JWTPayloadExtractor\AbstractExtractor;
 use Istio\JWTPayloadExtractor\OriginTokenExtractor;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,7 +31,7 @@ class OriginTokenExtractorTest extends TestCase
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessageMatches(
-            sprintf('~`%s` or `%s`~', ExtractorInterface::IN_HEADER, ExtractorInterface::IN_QUERY_PARAM)
+            sprintf('~`%s` or `%s`~', AbstractExtractor::IN_HEADER, AbstractExtractor::IN_QUERY_PARAM)
         );
 
         new OriginTokenExtractor('valid', 'invalid', 'authorization');
@@ -65,8 +65,8 @@ class OriginTokenExtractorTest extends TestCase
 
     private function extractRequests(ServerRequestInterface $inHeader, ServerRequestInterface $inQueryParam): array
     {
-        $headerExtractor = new OriginTokenExtractor('valid', ExtractorInterface::IN_HEADER, 'authorization');
-        $queryParamExtractor = new OriginTokenExtractor('valid', ExtractorInterface::IN_QUERY_PARAM, 'token');
+        $headerExtractor = new OriginTokenExtractor('valid', AbstractExtractor::IN_HEADER, 'authorization');
+        $queryParamExtractor = new OriginTokenExtractor('valid', AbstractExtractor::IN_QUERY_PARAM, 'token');
 
         return [$headerExtractor->extract($inHeader), $queryParamExtractor->extract($inQueryParam)];
     }
