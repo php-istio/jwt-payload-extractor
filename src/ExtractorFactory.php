@@ -19,12 +19,12 @@ class ExtractorFactory
 
     public static function fromOriginTokenHeader(string $issuer, string $header): OriginTokenExtractor
     {
-        return new OriginTokenExtractor($issuer, 'headers', $header);
+        return new OriginTokenExtractor($issuer, ExtractorInterface::IN_HEADER, $header);
     }
 
     public static function fromOriginTokenQueryParam(string $issuer, string $queryParam): OriginTokenExtractor
     {
-        return new OriginTokenExtractor($issuer, 'query', $queryParam);
+        return new OriginTokenExtractor($issuer, ExtractorInterface::IN_QUERY_PARAM, $queryParam);
     }
 
     public static function fromExtractors(ExtractorInterface ...$extractors): CompositeExtractor

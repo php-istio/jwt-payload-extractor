@@ -10,9 +10,13 @@ declare(strict_types=1);
 
 namespace Istio\JWTPayloadExtractor;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ExtractorInterface
 {
-    public function extract(Request $request): ?array;
+    public const IN_HEADER = 'header';
+
+    public const IN_QUERY_PARAM = 'query_param';
+
+    public function extract(ServerRequestInterface $request): ?array;
 }

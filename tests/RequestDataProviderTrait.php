@@ -10,32 +10,32 @@ declare(strict_types=1);
 
 namespace Istio\JWTPayloadExtractor\Tests;
 
-use Symfony\Component\HttpFoundation\Request;
-
 trait RequestDataProviderTrait
 {
+    use RequestCreatorTrait;
+
     public function invalidRequests(): array
     {
         return [
             [
-                Request::create(''),
-                Request::create(''),
+                $this->createRequest(),
+                $this->createRequest(),
             ],
             [
-                Request::create('', server: ['HTTP_INVALID_NAME' => $this->getValidToken()]),
-                Request::create('', parameters: ['invalid_name' => $this->getValidToken()]),
+                $this->createRequest(headers: ['invalid_name' => '']),
+                $this->createRequest(queryParams: ['invalid_name' => '']),
             ],
             [
-                Request::create('', server: ['HTTP_AUTHORIZATION' => '']),
-                Request::create('', parameters: ['token' => '']),
+                $this->createRequest(headers: ['authorization' => '']),
+                $this->createRequest(queryParams: ['token' => '']),
             ],
             [
-                Request::create('', server: ['HTTP_AUTHORIZATION' => 'invalid header']),
-                Request::create('', parameters: ['token' => 'invalid param']),
+                $this->createRequest(headers: ['authorization' => 'invalid header']),
+                $this->createRequest(queryParams: ['token' => 'invalid query params']),
             ],
             [
-                Request::create('', server: ['HTTP_AUTHORIZATION' => $this->getInvalidToken()]),
-                Request::create('', parameters: ['token' => $this->getInvalidToken()]),
+                $this->createRequest(headers: ['authorization' => $this->getInvalidToken()]),
+                $this->createRequest(queryParams: ['token' => $this->getInvalidToken()]),
             ],
         ];
     }
@@ -44,8 +44,8 @@ trait RequestDataProviderTrait
     {
         return [
             [
-                Request::create('', server: ['HTTP_AUTHORIZATION' => $this->getValidToken()]),
-                Request::create('', parameters: ['token' => $this->getValidToken()]),
+                $this->createRequest(headers: ['authorization' => $this->getValidToken()]),
+                $this->createRequest(queryParams: ['token' => $this->getValidToken()]),
             ],
         ];
     }

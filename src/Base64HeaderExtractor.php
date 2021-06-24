@@ -12,9 +12,9 @@ namespace Istio\JWTPayloadExtractor;
 
 final class Base64HeaderExtractor extends AbstractExtractor
 {
-    public function __construct(string $issuer, string $itemName)
+    public function __construct(string $issuer, string $item)
     {
-        parent::__construct($issuer, 'headers', $itemName);
+        parent::__construct($issuer, ExtractorInterface::IN_HEADER, $item);
     }
 
     protected function extractFromValue(string $value): ?array

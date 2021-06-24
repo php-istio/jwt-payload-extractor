@@ -22,7 +22,7 @@ class ExtractorFactoryTest extends TestCase
     {
         $this->assertInstanceOf(
             OriginTokenExtractor::class,
-            ExtractorFactory::fromOriginTokenHeader('valid', 'Authorization')
+            ExtractorFactory::fromOriginTokenHeader('valid', 'authorization')
         );
 
         $this->assertInstanceOf(
@@ -32,7 +32,7 @@ class ExtractorFactoryTest extends TestCase
 
         $this->assertInstanceOf(
             Base64HeaderExtractor::class,
-            ExtractorFactory::fromBase64Header('valid', 'Authorization')
+            ExtractorFactory::fromBase64Header('valid', 'authorization')
         );
 
         $this->assertInstanceOf(

@@ -12,15 +12,6 @@ namespace Istio\JWTPayloadExtractor;
 
 final class OriginTokenExtractor extends AbstractExtractor
 {
-    public function __construct(string $issuer, string $requestBag, string $itemName)
-    {
-        if ('headers' !== $requestBag && 'query' !== $requestBag) {
-            throw new \LogicException(sprintf('Invalid request bag `%s`! Origin token must in: `headers` or `query` bag.', $requestBag));
-        }
-
-        parent::__construct($issuer, $requestBag, $itemName);
-    }
-
     protected function extractFromValue(string $value): ?array
     {
         $tokenParts = explode('.', $value, 3);

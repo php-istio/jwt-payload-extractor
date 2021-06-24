@@ -10,37 +10,47 @@ declare(strict_types=1);
 
 namespace Istio\JWTPayloadExtractor;
 
-use Symfony\Component\HttpFoundation\HeaderBag;
-use Symfony\Component\HttpFoundation\InputBag;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractExtractor implements ExtractorInterface
 {
-    private string $requestBag;
+    private string $in;
 
-    private string $itemName;
+    private string $item;
 
     private string $issuer;
 
     public function __construct(
         string $issuer,
-        string $requestBag,
-        string $itemName
+        string $in,
+        string $item
     ) {
         if ('' === $issuer) {
             throw new \LogicException('Issuer can not be blank!');
         }
 
+        if (ExtractorInterface::IN_HEADER !== $in && ExtractorInterface::IN_QUERY_PARAM !== $in) {
+            throw new \LogicException(
+                sprintf(
+                    'Origin token must in: `%s` or `%s`, can not in: `%s`',
+                    ExtractorInterface::IN_HEADER,
+                    ExtractorInterface::IN_QUERY_PARAM,
+                    $in
+                )
+            );
+        }
+
         $this->issuer = $issuer;
-        $this->requestBag = $requestBag;
-        $this->itemName = $itemName;
+        $this->in = $in;
+        $this->item = $item;
     }
 
-    final public function extract(Request $request): ?array
+    final public function extract(ServerRequestInterface $request): ?array
     {
-        /** @var InputBag|HeaderBag $bag */
-        $bag = $request->{$this->requestBag};
-        $value = $bag->get($this->itemName);
+        $value = match ($this->in) {
+            ExtractorInterface::IN_HEADER => $request->getHeader($this->item)[0] ?? null,
+            ExtractorInterface::IN_QUERY_PARAM => $request->getQueryParams()[$this->item] ?? null
+        };
 
         if (false === is_string($value)) {
             return null;

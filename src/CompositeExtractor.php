@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Istio\JWTPayloadExtractor;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class CompositeExtractor implements ExtractorInterface
 {
@@ -18,7 +18,7 @@ final class CompositeExtractor implements ExtractorInterface
     {
     }
 
-    public function extract(Request $request): ?array
+    public function extract(ServerRequestInterface $request): ?array
     {
         foreach ($this->extractors as $extractor) {
             /** @var ExtractorInterface $extractor */

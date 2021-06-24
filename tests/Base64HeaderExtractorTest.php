@@ -12,7 +12,7 @@ namespace Istio\JWTPayloadExtractor\Tests;
 
 use Istio\JWTPayloadExtractor\Base64HeaderExtractor;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Base64HeaderExtractorTest extends TestCase
 {
@@ -23,13 +23,13 @@ class Base64HeaderExtractorTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessageMatches('~can not be blank!~');
 
-        new Base64HeaderExtractor('', 'Authorization');
+        new Base64HeaderExtractor('', 'authorization');
     }
 
     /**
      * @dataProvider invalidRequests
      */
-    public function testExtractFromInvalidRequests(Request $inHeader)
+    public function testExtractFromInvalidRequests(ServerRequestInterface $inHeader)
     {
         $extractor = new Base64HeaderExtractor('valid', 'Authorization');
         $payloadFromHeader = $extractor->extract($inHeader);
@@ -40,7 +40,7 @@ class Base64HeaderExtractorTest extends TestCase
     /**
      * @dataProvider validRequests
      */
-    public function testExtractFromValidRequests(Request $inHeader)
+    public function testExtractFromValidRequests(ServerRequestInterface $inHeader)
     {
         $extractor = new Base64HeaderExtractor('valid', 'Authorization');
         $payloadFromHeader = $extractor->extract($inHeader);

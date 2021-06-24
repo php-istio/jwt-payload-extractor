@@ -13,14 +13,16 @@ namespace Istio\JWTPayloadExtractor\Tests;
 use Istio\JWTPayloadExtractor\ExtractorFactory;
 use Istio\JWTPayloadExtractor\ExtractorInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class CompositeExtractorTest extends TestCase
 {
+    use RequestCreatorTrait;
+
     /**
      * @dataProvider validRequests
      */
-    public function testExtractFromValidRequestsWithEmptyExtractors(Request $request): void
+    public function testExtractFromValidRequestsWithEmptyExtractors(ServerRequestInterface $request): void
     {
         $extractor = ExtractorFactory::fromExtractors();
         $payload = $extractor->extract($request);
@@ -31,7 +33,7 @@ class CompositeExtractorTest extends TestCase
     /**
      * @dataProvider validRequests
      */
-    public function testExtractFromValidRequests(Request $request): void
+    public function testExtractFromValidRequests(ServerRequestInterface $request): void
     {
         $extractor = $this->getExtractor();
         $payload = $extractor->extract($request);
@@ -43,7 +45,7 @@ class CompositeExtractorTest extends TestCase
     /**
      * @dataProvider invalidRequests
      */
-    public function testExtractFromInvalidRequests(Request $request): void
+    public function testExtractFromInvalidRequests(ServerRequestInterface $request): void
     {
         $extractor = $this->getExtractor();
         $payload = $extractor->extract($request);
@@ -54,32 +56,32 @@ class CompositeExtractorTest extends TestCase
     public function validRequests(): array
     {
         return [
-            [Request::create('', server: ['HTTP_X_JWT_PAYLOAD' => $this->getValidBase64Payload()])],
-            [Request::create('', server: ['HTTP_AUTHORIZATION' => $this->getValidOriginToken()])],
-            [Request::create('', parameters: ['token' => $this->getValidOriginToken()])],
+            [$this->createRequest(headers: ['x-jwt-payload' => $this->getValidBase64Payload()])],
+            [$this->createRequest(headers: ['authorization' => $this->getValidOriginToken()])],
+            [$this->createRequest(queryParams: ['token' => $this->getValidOriginToken()])],
         ];
     }
 
     public function invalidRequests(): array
     {
         return [
-            [Request::create('')],
-            [Request::create('', server: ['HTTP_X_JWT_PAYLOAD' => ''])],
-            [Request::create('', server: ['HTTP_AUTHORIZATION' => ''])],
-            [Request::create('', parameters: ['token' => ''])],
-            [Request::create('', server: ['HTTP_X_JWT_PAYLOAD' => $this->getValidOriginToken()])],
-            [Request::create('', server: ['HTTP_AUTHORIZATION' => $this->getValidBase64Payload()])],
-            [Request::create('', server: ['HTTP_X_JWT_PAYLOAD' => $this->getInvalidBase64Payload()])],
-            [Request::create('', server: ['HTTP_AUTHORIZATION' => $this->getInvalidOriginToken()])],
-            [Request::create('', parameters: ['token' => $this->getInvalidOriginToken()])],
+            [$this->createRequest()],
+            [$this->createRequest(headers: ['x-jwt-payload' => ''])],
+            [$this->createRequest(headers: ['authorization' => ''])],
+            [$this->createRequest(queryParams: ['token' => ''])],
+            [$this->createRequest(headers: ['x-jwt-payload' => $this->getValidOriginToken()])],
+            [$this->createRequest(headers: ['authorization' => $this->getValidBase64Payload()])],
+            [$this->createRequest(headers: ['x-jwt-payload' => $this->getInvalidBase64Payload()])],
+            [$this->createRequest(headers: ['authorization' => $this->getInvalidOriginToken()])],
+            [$this->createRequest(queryParams: ['token' => $this->getInvalidOriginToken()])],
         ];
     }
 
     private function getExtractor(): ExtractorInterface
     {
         return ExtractorFactory::fromExtractors(
-            ExtractorFactory::fromBase64Header('valid', 'X-JWT-Payload'),
-            ExtractorFactory::fromOriginTokenHeader('valid', 'Authorization'),
+            ExtractorFactory::fromBase64Header('valid', 'x-jwt-payload'),
+            ExtractorFactory::fromOriginTokenHeader('valid', 'authorization'),
             ExtractorFactory::fromOriginTokenQueryParam('valid', 'token'),
         );
     }
