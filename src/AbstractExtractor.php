@@ -30,14 +30,7 @@ abstract class AbstractExtractor implements ExtractorInterface
         }
 
         if (ExtractorInterface::IN_HEADER !== $in && ExtractorInterface::IN_QUERY_PARAM !== $in) {
-            throw new \LogicException(
-                sprintf(
-                    'Origin token must in: `%s` or `%s`, can not in: `%s`',
-                    ExtractorInterface::IN_HEADER,
-                    ExtractorInterface::IN_QUERY_PARAM,
-                    $in
-                )
-            );
+            throw new \LogicException(sprintf('Origin token must in: `%s` or `%s`, can not in: `%s`', ExtractorInterface::IN_HEADER, ExtractorInterface::IN_QUERY_PARAM, $in));
         }
 
         $this->issuer = $issuer;
