@@ -37,7 +37,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: "running unit tests"
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-clover build/logs/phpunit/clover.xml --log-junit build/logs/phpunit/junit.xml
 
       - name: "upload coverage results to Codecov"
         uses: codecov/codecov-action@v1
