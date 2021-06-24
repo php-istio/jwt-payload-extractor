@@ -42,7 +42,7 @@ abstract class AbstractExtractor implements ExtractorInterface
         $bag = $request->{$this->requestBag};
         $value = $bag->get($this->itemName);
 
-        if (false !== is_string($value)) {
+        if (false === is_string($value)) {
             return null;
         }
 
