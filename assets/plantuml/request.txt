@@ -1,0 +1,14 @@
+@startuml
+[*] --> Istio : Request with JWT
+
+Istio : Check JWT issuer exist in rules
+Istio : & validate JWT by issuer JWKS
+Istio : & check authorization rules
+Istio --> Application : Valid
+Istio --> Error : Invalid
+
+Application : Extract and use trusted JWT payload
+Application --> [*] : Response
+
+Error --> [*] : Response (401 or 403)
+@enduml

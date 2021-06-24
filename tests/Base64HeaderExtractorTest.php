@@ -31,7 +31,7 @@ class Base64HeaderExtractorTest extends TestCase
      */
     public function testExtractFromInvalidRequests(ServerRequestInterface $inHeader)
     {
-        $extractor = new Base64HeaderExtractor('valid', 'Authorization');
+        $extractor = new Base64HeaderExtractor('valid', 'authorization');
         $payloadFromHeader = $extractor->extract($inHeader);
 
         $this->assertNull($payloadFromHeader);
@@ -42,7 +42,7 @@ class Base64HeaderExtractorTest extends TestCase
      */
     public function testExtractFromValidRequests(ServerRequestInterface $inHeader)
     {
-        $extractor = new Base64HeaderExtractor('valid', 'Authorization');
+        $extractor = new Base64HeaderExtractor('valid', 'authorization');
         $payloadFromHeader = $extractor->extract($inHeader);
 
         $this->assertIsArray($payloadFromHeader);
