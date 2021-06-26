@@ -3,6 +3,7 @@
 ![example workflow](https://github.com/php-istio/jwt-payload-extractor/actions/workflows/unit-tests.yml/badge.svg)
 ![example workflow](https://github.com/php-istio/jwt-payload-extractor/actions/workflows/coding-standards.yml/badge.svg)
 [![codecov](https://codecov.io/gh/php-istio/jwt-payload-extractor/branch/main/graph/badge.svg?token=I2ZACWOYHM)](https://codecov.io/gh/php-istio/jwt-payload-extractor)
+[![Latest Stable Version](http://poser.pugx.org/php-istio/jwt-payload-extractor/v)](https://packagist.org/packages/php-istio/jwt-payload-extractor)
 
 ## About
 
@@ -70,7 +71,7 @@ $payload = $extractor->extract($serverRequest);
 //......
 ```
 
-+ Extract base64 payload header:
++ Extract base64 payload in header:
 
 ```php
 <?php
