@@ -35,7 +35,7 @@ composer require nyholm/psr7 nyholm/psr7-server
 
 ## Usage
 
-Istio CRD [JWTRules](https://istio.io/latest/docs/reference/config/security/jwt/#JWTRule) support forward origin
+Istio [JWTRules](https://istio.io/latest/docs/reference/config/security/jwt/#JWTRule) CRD (Custom Resource Definition) support forward origin
 token (`forwardOriginalToken` option), or just only base64 payload via specify header name
 (`outputPayloadToHeader` option), depend on your strategy you need to select method to extract your trusted JWT payload from forwarded request:
 
