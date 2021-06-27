@@ -7,7 +7,7 @@
 
 ## About
 
-This library help to extract trusted JWT payload from request forwarded by Istio Envoy proxy. It's based
+This library help to extract trusted JWT payload from request forwarded by Istio Sidecar. It's based
 on [PSR-7 Server Request Message](https://www.php-fig.org/psr/psr-7/) ensures interoperability with other packages and
 frameworks.
 

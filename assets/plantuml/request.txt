@@ -1,14 +1,9 @@
 @startuml
-[*] --> IstioEnvoyProxy : Request with JWT
+[*] --> IstioSidecar : Request with JWT
 
-IstioEnvoyProxy : Check JWT issuer exist in rules
-IstioEnvoyProxy : & validate JWT by issuer JWKS
-IstioEnvoyProxy : & check authorization rules
-IstioEnvoyProxy --> Application : Valid
-IstioEnvoyProxy --> Error : Invalid
+IstioSidecar : Validate JWT
+IstioSidecar --> Application : Valid
+IstioSidecar --> Error : Invalid
 
 Application : Use this library to extract and use trusted JWT payload
-Application --> [*] : Response
-
-Error --> [*] : Response (401 or 403)
 @enduml
