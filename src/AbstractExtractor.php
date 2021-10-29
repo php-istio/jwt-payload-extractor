@@ -24,22 +24,28 @@ abstract class AbstractExtractor implements ExtractorInterface
 
     private string $issuer;
 
+    private ?string $prefix;
+
     public function __construct(
         string $issuer,
         string $in,
-        string $item
+        string $item,
+        string $prefix = null
     ) {
         if ('' === $issuer) {
             throw new \LogicException('Issuer can not be blank!');
         }
 
         if (self::IN_HEADER !== $in && self::IN_QUERY_PARAM !== $in) {
-            throw new \LogicException(sprintf('Item must in: `%s` or `%s`, can not in: `%s`', self::IN_HEADER, self::IN_QUERY_PARAM, $in));
+            throw new \LogicException(
+                sprintf('Item must in: `%s` or `%s`, can not in: `%s`', self::IN_HEADER, self::IN_QUERY_PARAM, $in)
+            );
         }
 
         $this->issuer = $issuer;
         $this->in = $in;
         $this->item = $item;
+        $this->prefix = $prefix;
     }
 
     final public function extract(ServerRequestInterface $request): ?array
@@ -51,6 +57,14 @@ abstract class AbstractExtractor implements ExtractorInterface
 
         if (false === is_string($value)) {
             return null;
+        }
+
+        if (null !== $this->prefix) {
+            if (!str_starts_with($value, $this->prefix)) {
+                return null;
+            }
+
+            $value = substr($value, strlen($this->prefix));
         }
 
         $payload = $this->extractFromValue($value);
