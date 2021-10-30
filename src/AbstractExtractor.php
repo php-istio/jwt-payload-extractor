@@ -37,9 +37,7 @@ abstract class AbstractExtractor implements ExtractorInterface
         }
 
         if (self::IN_HEADER !== $in && self::IN_QUERY_PARAM !== $in) {
-            throw new \LogicException(
-                sprintf('Item must in: `%s` or `%s`, can not in: `%s`', self::IN_HEADER, self::IN_QUERY_PARAM, $in)
-            );
+            throw new \LogicException(sprintf('Item must in: `%s` or `%s`, can not in: `%s`', self::IN_HEADER, self::IN_QUERY_PARAM, $in));
         }
 
         $this->issuer = $issuer;

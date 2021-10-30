@@ -15,7 +15,7 @@ use Istio\JWTPayloadExtractor\ExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-class CompositeExtractorTest extends TestCase
+final class CompositeExtractorTest extends TestCase
 {
     use RequestCreatorTrait;
 
@@ -56,8 +56,8 @@ class CompositeExtractorTest extends TestCase
     public function validRequests(): array
     {
         return [
-            [$this->createRequest(headers: ['x-jwt-payload' => $this->getValidBase64Payload()])],
-            [$this->createRequest(headers: ['authorization' => $this->getValidOriginToken()])],
+            [$this->createRequest(headers: ['x-istio-jwt-payload' => $this->getValidBase64Payload()])],
+            [$this->createRequest(headers: ['authorization' => 'Bearer ' . $this->getValidOriginToken()])],
             [$this->createRequest(queryParams: ['token' => $this->getValidOriginToken()])],
         ];
     }
@@ -66,21 +66,23 @@ class CompositeExtractorTest extends TestCase
     {
         return [
             [$this->createRequest()],
-            [$this->createRequest(headers: ['x-jwt-payload' => ''])],
+            [$this->createRequest(headers: ['x-istio-jwt-payload' => ''])],
             [$this->createRequest(headers: ['authorization' => ''])],
             [$this->createRequest(queryParams: ['token' => ''])],
-            [$this->createRequest(headers: ['x-jwt-payload' => $this->getValidOriginToken()])],
+            [$this->createRequest(headers: ['x-istio-jwt-payload' => $this->getValidOriginToken()])],
             [$this->createRequest(headers: ['authorization' => $this->getValidBase64Payload()])],
-            [$this->createRequest(headers: ['x-jwt-payload' => $this->getInvalidBase64Payload()])],
+            [$this->createRequest(headers: ['x-istio-jwt-payload' => $this->getInvalidBase64Payload()])],
             [$this->createRequest(headers: ['authorization' => $this->getInvalidOriginToken()])],
             [$this->createRequest(queryParams: ['token' => $this->getInvalidOriginToken()])],
+            [$this->createRequest(headers: ['authorization' => 'Bearer=' . $this->getValidOriginToken()])],
+            [$this->createRequest(headers: ['authorization' => 'BearEr ' . $this->getValidOriginToken()])],
         ];
     }
 
     private function getExtractor(): ExtractorInterface
     {
         return ExtractorFactory::fromExtractors(
-            ExtractorFactory::fromBase64Header('valid', 'x-jwt-payload'),
+            ExtractorFactory::fromBase64Header('valid', 'x-istio-jwt-payload'),
             ExtractorFactory::fromOriginTokenHeader('valid', 'authorization'),
             ExtractorFactory::fromOriginTokenQueryParam('valid', 'token'),
         );

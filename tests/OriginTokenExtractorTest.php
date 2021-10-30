@@ -15,9 +15,9 @@ use Istio\JWTPayloadExtractor\OriginTokenExtractor;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-class OriginTokenExtractorTest extends TestCase
+final class OriginTokenExtractorTest extends TestCase
 {
-    use RequestDataProviderTrait;
+    use RequestCreatorTrait;
 
     public function testInitWithBlankIssuer(): void
     {
@@ -50,6 +50,36 @@ class OriginTokenExtractorTest extends TestCase
         $this->assertNull($payloadFromQueryParam);
     }
 
+    public function invalidRequests(): array
+    {
+        return [
+            [
+                $this->createRequest(),
+                $this->createRequest(),
+            ],
+            [
+                $this->createRequest(headers: ['invalid_name' => '']),
+                $this->createRequest(queryParams: ['invalid_name' => '']),
+            ],
+            [
+                $this->createRequest(headers: ['authorization' => '']),
+                $this->createRequest(queryParams: ['token' => '']),
+            ],
+            [
+                $this->createRequest(headers: ['authorization' => 'Bearer invalid header']),
+                $this->createRequest(queryParams: ['token' => 'invalid query params']),
+            ],
+            [
+                $this->createRequest(headers: ['authorization' => 'Bearer=' . $this->getValidToken()]),
+                $this->createRequest(queryParams: ['token' => 'Bearer..' . $this->getInvalidToken()]),
+            ],
+            [
+                $this->createRequest(headers: ['authorization' => 'Bearer ' . $this->getInvalidToken()]),
+                $this->createRequest(queryParams: ['token' => $this->getInvalidToken()]),
+            ],
+        ];
+    }
+
     /**
      * @dataProvider validRequests
      */
@@ -63,9 +93,19 @@ class OriginTokenExtractorTest extends TestCase
         $this->assertSame('valid', $payloadFromQueryParam['iss']);
     }
 
+    public function validRequests(): array
+    {
+        return [
+            [
+                $this->createRequest(headers: ['authorization' => 'Bearer ' . $this->getValidToken()]),
+                $this->createRequest(queryParams: ['token' => $this->getValidToken()]),
+            ],
+        ];
+    }
+
     private function extractRequests(ServerRequestInterface $inHeader, ServerRequestInterface $inQueryParam): array
     {
-        $headerExtractor = new OriginTokenExtractor('valid', AbstractExtractor::IN_HEADER, 'authorization');
+        $headerExtractor = new OriginTokenExtractor('valid', AbstractExtractor::IN_HEADER, 'authorization', 'Bearer ');
         $queryParamExtractor = new OriginTokenExtractor('valid', AbstractExtractor::IN_QUERY_PARAM, 'token');
 
         return [$headerExtractor->extract($inHeader), $queryParamExtractor->extract($inQueryParam)];
