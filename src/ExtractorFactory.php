@@ -17,9 +17,9 @@ class ExtractorFactory
         return new Base64HeaderExtractor($issuer, $header);
     }
 
-    public static function fromOriginTokenHeader(string $issuer, string $header): ExtractorInterface
+    public static function fromOriginTokenHeader(string $issuer, string $header = 'Authorization', string $prefix = 'Bearer '): ExtractorInterface
     {
-        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_HEADER, $header);
+        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_HEADER, $header, $prefix);
     }
 
     public static function fromOriginTokenQueryParam(string $issuer, string $queryParam): ExtractorInterface
