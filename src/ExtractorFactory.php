@@ -22,9 +22,9 @@ class ExtractorFactory
         return new OriginTokenExtractor($issuer, AbstractExtractor::IN_HEADER, $header, $prefix);
     }
 
-    public static function fromOriginTokenQueryParam(string $issuer, string $queryParam): ExtractorInterface
+    public static function fromOriginTokenQueryParam(string $issuer, string $queryParam, string $prefix = ''): ExtractorInterface
     {
-        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_QUERY_PARAM, $queryParam);
+        return new OriginTokenExtractor($issuer, AbstractExtractor::IN_QUERY_PARAM, $queryParam, $prefix);
     }
 
     public static function fromExtractors(ExtractorInterface ...$extractors): ExtractorInterface
