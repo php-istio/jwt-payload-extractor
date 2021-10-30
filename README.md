@@ -53,12 +53,16 @@ $creator = new \Nyholm\Psr7Server\ServerRequestCreator(
 );
 
 $serverRequest = $creator->fromGlobals();
-$extractor = \Istio\JWTPayloadExtractor\ExtractorFactory::fromOriginTokenHeader('issuer.example', 'authorization');
+$extractor = \Istio\JWTPayloadExtractor\ExtractorFactory::fromOriginTokenHeader('issuer.example');
 $payload = $extractor->extract($serverRequest);
 
 if(null !== $payload) {
     var_dump($payload);
 }
+
+// by default it extract token from `authorization` header with `Bearer ` prefix, you can change it via next args:
+
+$extractor = \Istio\JWTPayloadExtractor\ExtractorFactory::fromOriginTokenHeader('issuer.example', 'x-token', 'yourPrefix ');
 ```
 
 + Extract origin token in query param:
